@@ -1,8 +1,56 @@
+/* Bauhaus COLOUR PALETTE */
+/* Grey – #E6E6E6 */
+/* Blue – #1839E8 */
+/* Yellow – #FED400 */
+/* Red – #FF2519 */
+
+@import url('https://fonts.googleapis.com/css?family=Baumans');
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  background: dodgerblue;
-  color: white;
+  background: #E6E6E6;
+  color: black;
+  font-family: 'Baumans', cursive;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+main {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: normal;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.grid {
+  width: 600px;
+  height: 600px;
+  border: 1px solid black;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid div {
+  width: calc(100%/16);
+  height: calc(100%/16);
+  flex-grow: 1;
+}
+
+.alien {
+  background: url(images/1x/Triangle.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
