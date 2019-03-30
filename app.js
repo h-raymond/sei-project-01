@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // const bullet = 247
 
   // ====================== FUNCTIONS =====================
+  // function playerPosition(){
+  //   squares.find(square => square.classList.contains('player'))
+  // }
   function addPlayerClass(){
     squares[playerIndex].classList.add('player')
   }
@@ -57,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // ======================= LASERS =======================
-  // Find the position of the player
-  // Add a class
+  // Find the position of the player – make sure this is in the global scope
+  // Add a class of bullet to the 
 
   // ======================= ALIENS =======================
   // Create the aliens so they appear as a child of the divs that have been created by creating additional classes for .alien
