@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const squares = []
   let aliens = [18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
   let playerIndex = 247
+  // const bullet = 247
 
   // ====================== FUNCTIONS =====================
   function addPlayerClass(){
@@ -14,10 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function movePlayer() {
     // find the square with the class of "player"
     const player = squares.find(square => square.classList.contains('player'))
+    console.log(player, 'Added Player')
     // remove the class of player from that square
     player.classList.remove('player')
+    console.log(player, 'Removed player')
     // add the class of player to square the player should move to
     addPlayerClass()
+    console.log(player, 'Added again')
   }
 
   // ======================== GRID ========================
@@ -53,30 +57,27 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // ======================= LASERS =======================
-  function fire() {
-    // Create a variable which defines the start position based on the position of the player
-    // Set a start position for the bullet to travel (this will have something to do with the width of the container minus the current div position for the bullet to travel straight up)
-    
-  }
+  // Find the position of the player
+  // Add a class
 
   // ======================= ALIENS =======================
   // Create the aliens so they appear as a child of the divs that have been created by creating additional classes for .alien
-  aliens.forEach((alienIndex) => {
-    squares[alienIndex].classList.add('alien')
-  })
+  // aliens.forEach((alienIndex) => {
+  //   squares[alienIndex].classList.add('alien')
+  // })
 
   // Alien movement to remove class and then add class again using a set interval
-  setInterval(() => {
-    aliens.forEach((alienIndex) => {
-      squares[alienIndex].classList.remove('alien')
-    })
-
-    aliens = aliens.map(alienIndex => alienIndex +1)
-    console.log(aliens)
-    aliens.forEach((alienIndex) => {
-      squares[alienIndex].classList.add('alien')
-    })
-  }, 500)
+  // setInterval(() => {
+  //   aliens.forEach((alienIndex) => {
+  //     squares[alienIndex].classList.remove('alien')
+  //   })
+  //
+  //   aliens = aliens.map(alienIndex => alienIndex +1)
+  //   console.log(aliens)
+  //   aliens.forEach((alienIndex) => {
+  //     squares[alienIndex].classList.add('alien')
+  //   })
+  // }, 500)
 
   // Restrict the width of their movement so that they can only run across 12 central divs
 
