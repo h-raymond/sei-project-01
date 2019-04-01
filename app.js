@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let playerIndex = 247
   let alienMove = 0
   const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
+  const score = document.querySelector('.score')
+  let scoreTotal = 0
 
   // ====================== FUNCTIONS =====================
 
@@ -59,13 +61,28 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (e) => {
     let missileIndex = playerIndex - width
     if(e.keyCode === 32) {
-      setInterval(() => {
+      const missileInterval = setInterval(() => {
+        let missileTarget = squares[missileIndex]
+        missileTarget.classList.remove('missile')
+
         if(missileIndex - width >= 0) {
-          squares[missileIndex].classList.remove('missile')
           missileIndex -= width
-          squares[missileIndex].classList.add('missile')
+          missileTarget = squares[missileIndex]
+
+          if (missileTarget.classList.contains('alien')) {
+            console.log('explosion')// This is where we need to remove the alien from the array if we can target that specific one, or push it into an array of dead aliens
+            const position = aliens.indexOf(missileIndex)
+            aliens.splice(position, 1)
+            missileTarget.classList.remove('alien')
+            missileTarget.classList.remove('missile')
+            scoreTotal++
+            score.innertext = scoreTotal
+            clearInterval(missileInterval)
+          } else {
+            missileTarget.classList.add('missile')
+          }
         } else {
-          squares[missileIndex].classList.remove('missile')
+          missileTarget.classList.remove('missile')
         }
       }, 80)
     }
@@ -94,27 +111,29 @@ document.addEventListener('DOMContentLoaded', () => {
       squares[alienIndex].classList.add('alien')
     })
 
-    alienMove ++
+    alienMove++
     if (alienMove === alienMovement.length) alienMove = 0
     if(aliens.some(alien => alien >= 240)) clearInterval(alienTimer)
   }, 500)
 
 
   // ===================== ALIEN BOMBS =====================
-  const alienBombId = setInterval(alienBomb, 800)
+  const alienBombId = setInterval(alienBomb, 10000)
 
   function alienBomb() {
-  // setInterval(() => {
     const randomIndex = Math.floor(Math.random() * 10)
     let bombIndex = aliens[randomIndex]
 
     setInterval(() => {
-      if (bombIndex + width <= 240) {
+      if(bombIndex + width <= 240) {
         squares[bombIndex].classList.remove('bomb')
         bombIndex += width
         squares[bombIndex].classList.add('bomb')
       } else {
-        squares[bombIndex].classList.remove('bomb')
+        squares[bombIndex].classList.remove('bomb') //This is currently causing error messages
+      }
+      if(squares[bombIndex].classList.contains('player')) {
+        squares[bombIndex].classList.remove('player')
       }
     }, 500)
   }
