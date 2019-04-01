@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const squares = []
   let aliens = [18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
   let playerIndex = 247
-  let bulletIndex = playerIndex
+  let alienMove = 0
+  const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
 
   // ====================== FUNCTIONS =====================
   // function playerPosition(){
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ======================== GRID ========================
-  for(let i = 0; i < width * width; i++) {
+  for(let i = 0; i < width ** 2; i++) {
     const square = document.createElement('div')
     squares.push(square)
     grid.appendChild(square)
@@ -56,16 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ======================= LASERS =======================
   // Find the position of the player by using the playerIndex
-
   // Add an eventListener with Keydown for the spacebar that will generate the bullet
-  // Add event listener on space bar to fire bullet ----------------------
   document.addEventListener('keydown', (e) => {
+    let bulletIndex = playerIndex - width
     if(e.keyCode === 32) {
       setInterval(() => {
-        squares[bulletIndex].classList.add('bullet')
-        bulletIndex -= width
         squares[bulletIndex].classList.remove('bullet')
+        bulletIndex -= width
+        squares[bulletIndex].classList.add('bullet')
       }, 80)
+      if(bulletIndex-width >= 0){
+        squares[bulletIndex].classList.remove('bullet')
+      }
     }
   })
   //Add the bullet to the div ABOVE the player's current position (this should be - width of the current position)
@@ -81,16 +84,28 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // Alien movement to remove class and then add class again using a set interval
-  setInterval(() => {
+  const alienTimer = setInterval(() => {
     aliens.forEach((alienIndex) => {
       squares[alienIndex].classList.remove('alien')
     })
+    console.log(aliens)
+    //loop through the aliens array
+    //add alienMovement array to each number in the aliens
 
-    aliens = aliens.map(alienIndex => alienIndex +1)
+    aliens = aliens.map((alienIndex) => alienIndex + alienMovement[alienMove])
+
+    console.log(aliens)
+
     aliens.forEach((alienIndex) => {
       squares[alienIndex].classList.add('alien')
     })
-  }, 500)
+
+    alienMove ++
+    if (alienMove === alienMovement.length) alienMove = 0
+
+    if(aliens.some(alien => alien >= 240)) clearInterval(alienTimer)
+  }, 30)
+
 
   // Restrict the width of their movement so that they can only run across 12 central divs
 
