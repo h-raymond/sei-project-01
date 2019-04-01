@@ -62,9 +62,15 @@ h1 {
   background-repeat: no-repeat;
 }
 
-.bullet {
+.missile {
   background: url(images/1x/Blue-Circle.png);
   background-size: 30% 30%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.bomb {
+  background: url(images/1x/Bomb.png);
+  background-size: 50% 50%;
   background-position: center;
   background-repeat: no-repeat;
 }

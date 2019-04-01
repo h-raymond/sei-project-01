@@ -10,9 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
 
   // ====================== FUNCTIONS =====================
-  // function playerPosition(){
-  //   squares.find(square => square.classList.contains('player'))
-  // }
+
   function addPlayerClass(){
     squares[playerIndex].classList.add('player')
   }
@@ -55,26 +53,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  // ======================= LASERS =======================
+  // ======================= MISSILE =======================
   // Find the position of the player by using the playerIndex
-  // Add an eventListener with Keydown for the spacebar that will generate the bullet
+  // Add an eventListener with Keydown for the spacebar that will generate the missile
   document.addEventListener('keydown', (e) => {
-    let bulletIndex = playerIndex - width
+    let missileIndex = playerIndex - width
     if(e.keyCode === 32) {
       setInterval(() => {
-        squares[bulletIndex].classList.remove('bullet')
-        bulletIndex -= width
-        squares[bulletIndex].classList.add('bullet')
+        if(missileIndex - width >= 0) {
+          squares[missileIndex].classList.remove('missile')
+          missileIndex -= width
+          squares[missileIndex].classList.add('missile')
+        } else {
+          squares[missileIndex].classList.remove('missile')
+        }
       }, 80)
-      if(bulletIndex-width >= 0){
-        squares[bulletIndex].classList.remove('bullet')
-      }
     }
   })
-  //Add the bullet to the div ABOVE the player's current position (this should be - width of the current position)
-  // Create a setInterval function for the bullet which will then -width * width (as the height is the same in my case) so that the bullet goes from it's start position to the end at the top of the container
 
-
+  // =========== MISSILE INTERSECTION WITH ALIEN ==========
+  // If the missile class is added to the same div as alien
 
 
   // ======================= ALIENS =======================
@@ -88,13 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
     aliens.forEach((alienIndex) => {
       squares[alienIndex].classList.remove('alien')
     })
-    console.log(aliens)
-    //loop through the aliens array
+
     //add alienMovement array to each number in the aliens
-
     aliens = aliens.map((alienIndex) => alienIndex + alienMovement[alienMove])
-
-    console.log(aliens)
 
     aliens.forEach((alienIndex) => {
       squares[alienIndex].classList.add('alien')
@@ -102,16 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     alienMove ++
     if (alienMove === alienMovement.length) alienMove = 0
-
     if(aliens.some(alien => alien >= 240)) clearInterval(alienTimer)
-  }, 30)
-
-
-  // Restrict the width of their movement so that they can only run across 12 central divs
-
+  }, 500)
 
 
   // ===================== ALIEN BOMBS =====================
+  const alienBombId = setInterval(alienBomb, 800)
+
+  function alienBomb() {
+  // setInterval(() => {
+    const randomIndex = Math.floor(Math.random() * 10)
+    let bombIndex = aliens[randomIndex]
+
+    setInterval(() => {
+      if (bombIndex + width <= 240) {
+        squares[bombIndex].classList.remove('bomb')
+        bombIndex += width
+        squares[bombIndex].classList.add('bomb')
+      } else {
+        squares[bombIndex].classList.remove('bomb')
+      }
+    }, 500)
+  }
+
+  alienBomb()
+
+  // Ability for Alien to drop bomb when no alien is below. i.e. div +width is empty
 
   // CLOSING OF DOMContentLoaded
 })
