@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>SEI Project 1: Space Invaders</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="app.js" charset="utf-8"></script>
-  </head>
-  <body>
-    <header>
-      <h1>BAUHAUS</h1>
-      <h2>Space Invaders</h2>
+<head>
+  <meta charset="utf-8">
+  <title>SEI Project 1: Space Invaders</title>
+  <link rel="stylesheet" type="text/css" href="reset.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" charset="utf-8"></script>
+</head>
+<body>
+  <header>
+    <h1>BAUHAUS</h1>
+    <h2>Space Invaders</h2>
+
+    <div class="player-info">
+
       <h4>Score: <span class="score">0</span></h4>
-      <div class="Lives">
+
+      <div class="lives">
         <h4>
           Lives:
           <img src="images/1x/Yellow-Life.png" />
@@ -20,11 +25,12 @@
         </h4>
       </div>
 
+    </div>
+
     </header>
     <main>
-      <div class="grid">
-
-      </div>
+      <div class="grid"></div>
+      <div class="end-game"></div>
     </main>
   </body>
-</html>
+  </html>

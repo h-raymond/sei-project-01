@@ -4,14 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid')
   const width = 16
   const squares = []
-  let aliens = [18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45,50,51,52,53,54,55,56,57,58,59,60,61]
+  const aliensStart = [2,3,4,5,6,7,8,9,10,11,12,13,18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
+  let aliens = aliensStart
   let playerIndex = 247
   let alienMove = 0
   const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
   const score = document.querySelector('.score')
   let scoreTotal = 0
   let bombInterval = 0
-  const playerLives = document.querySelectorAll('.Lives img')
+  const playerLives = document.querySelectorAll('.lives img')
   let livesRemaining = 3
 
   // ====================== FUNCTIONS =====================
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ======================== GRID ========================
+
   for(let i = 0; i < width ** 2; i++) {
     const square = document.createElement('div')
     squares.push(square)
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ======================= PLAYER =======================
+
   // Set the player inside the grid
   addPlayerClass()
   // Setting up keycodes to enable player movement
@@ -115,9 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function alienBomb() {
     // const randomIndex = Math.floor(Math.random() * 10)
     let bombIndex = aliens[Math.floor(Math.random() * aliens.length)]
-
     // make sure we clear the interval so we don't duplicate it
-    // clearInterval(bombInterval)
     bombInterval = setInterval(() => {
 
       // check that our index won't go out of range
@@ -138,11 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
           for(let i=0;i<playerLives.length - livesRemaining;i++) {
             playerLives[i].classList.add('hidden')
-
           }
-          // if livesRemaining === 0
           // end the game, ie stop all the intervals
-
+          if(livesRemaining === 0){
+            clearInterval(bombInterval)
+            clearInterval(alienTimer)
+            clearInterval(alienBombTimer)
+            grid.style.display = 'none'
+          }
           squares[bombIndex].classList.remove('bomb')
         }
       // otherwise just remove the bomb because we'll go out of index
@@ -169,13 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Alien movement to remove class and then add class again using a set interval
   const alienTimer = setInterval(moveAliens, 500)
 
-
   // ===================== ALIEN BOMBS =====================
   const alienBombTimer = setInterval(alienBomb, 1000)
-
-  // alienBomb()
-
-  // Ability for Alien to drop bomb when no alien is below. i.e. div +width is empty
 
   // CLOSING OF DOMContentLoaded
 })
