@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
   const score = document.querySelector('.score')
   let scoreTotal = 0
+  let bombInterval = 0
 
   // ====================== FUNCTIONS =====================
 
@@ -60,9 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add an eventListener with Keydown for the spacebar that will generate the missile
   document.addEventListener('keydown', (e) => {
     let missileIndex = playerIndex - width
+
     if(e.keyCode === 32) {
+      let missileTarget = squares[missileIndex]
       const missileInterval = setInterval(() => {
-        let missileTarget = squares[missileIndex]
         missileTarget.classList.remove('missile')
 
         if(missileIndex - width >= 0) {
@@ -70,14 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
           missileTarget = squares[missileIndex]
 
           if (missileTarget.classList.contains('alien')) {
-            console.log('explosion')// This is where we need to remove the alien from the array if we can target that specific one, or push it into an array of dead aliens
+
             const position = aliens.indexOf(missileIndex)
             aliens.splice(position, 1)
             missileTarget.classList.remove('alien')
             missileTarget.classList.remove('missile')
+
             scoreTotal++
-            score.innertext = scoreTotal
+            console.log(scoreTotal)
+            score.innerText = scoreTotal
+            console.log(score)
             clearInterval(missileInterval)
+
           } else {
             missileTarget.classList.add('missile')
           }
@@ -118,22 +124,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ===================== ALIEN BOMBS =====================
-  const alienBombId = setInterval(alienBomb, 10000)
+  const alienBombTimer = setInterval(alienBomb, 1000)
 
   function alienBomb() {
     const randomIndex = Math.floor(Math.random() * 10)
     let bombIndex = aliens[randomIndex]
 
-    setInterval(() => {
-      if(bombIndex + width <= 240) {
-        squares[bombIndex].classList.remove('bomb')
-        bombIndex += width
-        squares[bombIndex].classList.add('bomb')
+    // make sure we clear the interval so we don't duplicate it
+    // clearInterval(bombInterval)
+    bombInterval = setInterval(() => {
+
+      // check that our index won't go out of range
+      if (bombIndex + width <= squares.length) {
+
+        // ensure we allow enough "width" for the bomb to reach the bottom
+        if(bombIndex + width <= 260) {
+          squares[bombIndex].classList.remove('bomb')
+          bombIndex += width
+          squares[bombIndex].classList.add('bomb')
+        } else {
+          squares[bombIndex].classList.remove('bomb') //This is currently causing error messages
+        }
+
+        // remove the bomb when it hits a player
+        if(squares[bombIndex].classList.contains('player')) {
+          squares[bombIndex].classList.remove('player')
+          squares[bombIndex].classList.remove('bomb')
+
+          //clear the bomb interval because it's hit the player
+          clearInterval(bombInterval)
+        }
+
+      // otherwise just remove the bomb because we'll go out of index
       } else {
-        squares[bombIndex].classList.remove('bomb') //This is currently causing error messages
-      }
-      if(squares[bombIndex].classList.contains('player')) {
-        squares[bombIndex].classList.remove('player')
+        squares[bombIndex].classList.remove('bomb')
       }
     }, 500)
   }
