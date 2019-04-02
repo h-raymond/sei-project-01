@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const score = document.querySelector('.score')
   let scoreTotal = 0
   let bombInterval = 0
-  const playerLives = ['images/1x/Yellow-Life.png','images/1x/Yellow-Life.png','images/1x/Yellow-Life.png']
+  const playerLives = document.querySelectorAll('.Lives img')
+  let livesRemaining = 3
 
   // ====================== FUNCTIONS =====================
 
@@ -57,54 +58,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  // ======================= MISSILE =======================
-  // Find the position of the player by using the playerIndex
-  // Add an eventListener with Keydown for the spacebar that will generate the missile
-  document.addEventListener('keydown', (e) => {
+  function fireMissile(){
     let missileIndex = playerIndex - width
+    let missileTarget = squares[missileIndex]
+    const missileInterval = setInterval(() => {
+      missileTarget.classList.remove('missile')
 
-    if(e.keyCode === 32) {
-      let missileTarget = squares[missileIndex]
-      const missileInterval = setInterval(() => {
-        missileTarget.classList.remove('missile')
+      if(missileIndex - width >= 0) {
+        missileIndex -= width
+        missileTarget = squares[missileIndex]
 
-        if(missileIndex - width >= 0) {
-          missileIndex -= width
-          missileTarget = squares[missileIndex]
+        if(missileTarget.classList.contains('alien')) {
 
-          if(missileTarget.classList.contains('alien')) {
-
-            const position = aliens.indexOf(missileIndex)
-            aliens.splice(position, 1)
-            missileTarget.classList.remove('alien')
-            missileTarget.classList.remove('missile')
-
-            //Increase the score by +1
-            scoreTotal++
-            //Update the innerText to the scoreTotal
-            score.innerText = scoreTotal
-
-            clearInterval(missileInterval)
-
-          } else {
-            missileTarget.classList.add('missile')
-          }
-        } else {
+          const position = aliens.indexOf(missileIndex)
+          aliens.splice(position, 1)
+          missileTarget.classList.remove('alien')
           missileTarget.classList.remove('missile')
+
+          //Increase the score by +1
+          scoreTotal++
+          //Update the innerText to the scoreTotal
+          score.innerText = scoreTotal
+
+          clearInterval(missileInterval)
+
+        } else {
+          missileTarget.classList.add('missile')
         }
-      }, 80)
-    }
-  })
+      } else {
+        missileTarget.classList.remove('missile')
+      }
+    }, 80)
+  }
 
-
-  // ======================= ALIENS =======================
-  // Create the aliens so they appear as a child of the divs that have been created by creating additional classes for .alien
-  aliens.forEach((alienIndex) => {
-    squares[alienIndex].classList.add('alien')
-  })
-
-  // Alien movement to remove class and then add class again using a set interval
-  const alienTimer = setInterval(() => {
+  function moveAliens() {
     aliens.forEach((alienIndex) => {
       squares[alienIndex].classList.remove('alien')
     })
@@ -119,12 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //Increase alien moves through the array
     alienMove++
     if (alienMove === alienMovement.length) alienMove = 0
-    if(aliens.some(alien => alien >= 240)) clearInterval(alienTimer)
-  }, 500)
-
-
-  // ===================== ALIEN BOMBS =====================
-  const alienBombTimer = setInterval(alienBomb, 1000)
+    if(aliens.some(alien => alien >= 240)) {
+      clearInterval(alienTimer)
+      clearInterval(alienBombTimer)
+    }
+  }
 
   function alienBomb() {
     // const randomIndex = Math.floor(Math.random() * 10)
@@ -148,21 +134,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // remove the bomb and player when it hits the player
         if(squares[bombIndex].classList.contains('player')) {
-          playerLives.pop()
-          // squares[bombIndex].classList.remove('player')
+          livesRemaining--
+
+          for(let i=0;i<playerLives.length - livesRemaining;i++) {
+            playerLives[i].classList.add('hidden')
+
+          }
+          // if livesRemaining === 0
+          // end the game, ie stop all the intervals
 
           squares[bombIndex].classList.remove('bomb')
         }
-
       // otherwise just remove the bomb because we'll go out of index
       } else {
         squares[bombIndex].classList.remove('bomb')
-        // clearInterval(bombInterval)
       }
     }, 500)
   }
 
-  alienBomb()
+  // ======================= MISSILE =======================
+  // Find the position of the player by using the playerIndex
+  // Add an eventListener with Keydown for the spacebar that will generate the missile
+  document.addEventListener('keydown', (e) => {
+    if(e.keyCode === 32) fireMissile()
+  })
+
+
+  // ======================= ALIENS =======================
+  // Create the aliens so they appear as a child of the divs that have been created by creating additional classes for .alien
+  aliens.forEach((alienIndex) => {
+    squares[alienIndex].classList.add('alien')
+  })
+
+  // Alien movement to remove class and then add class again using a set interval
+  const alienTimer = setInterval(moveAliens, 500)
+
+
+  // ===================== ALIEN BOMBS =====================
+  const alienBombTimer = setInterval(alienBomb, 1000)
+
+  // alienBomb()
 
   // Ability for Alien to drop bomb when no alien is below. i.e. div +width is empty
 
