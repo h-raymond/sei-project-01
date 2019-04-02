@@ -34,6 +34,17 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  font-size: 20px;
+  line-height: normal;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.lives img{
+  
+}
+
 .grid {
   width: 350px;
   height: 350px;

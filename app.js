@@ -4,13 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid')
   const width = 16
   const squares = []
-  let aliens = [18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
+  let aliens = [18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45,50,51,52,53,54,55,56,57,58,59,60,61]
   let playerIndex = 247
   let alienMove = 0
   const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
   const score = document.querySelector('.score')
   let scoreTotal = 0
   let bombInterval = 0
+  const playerLives = ['images/1x/Yellow-Life.png','images/1x/Yellow-Life.png','images/1x/Yellow-Life.png']
 
   // ====================== FUNCTIONS =====================
 
@@ -71,17 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
           missileIndex -= width
           missileTarget = squares[missileIndex]
 
-          if (missileTarget.classList.contains('alien')) {
+          if(missileTarget.classList.contains('alien')) {
 
             const position = aliens.indexOf(missileIndex)
             aliens.splice(position, 1)
             missileTarget.classList.remove('alien')
             missileTarget.classList.remove('missile')
 
+            //Increase the score by +1
             scoreTotal++
-            console.log(scoreTotal)
+            //Update the innerText to the scoreTotal
             score.innerText = scoreTotal
-            console.log(score)
+
             clearInterval(missileInterval)
 
           } else {
@@ -93,9 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 80)
     }
   })
-
-  // =========== MISSILE INTERSECTION WITH ALIEN ==========
-  // If the missile class is added to the same div as alien
 
 
   // ======================= ALIENS =======================
@@ -117,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       squares[alienIndex].classList.add('alien')
     })
 
+    //Increase alien moves through the array
     alienMove++
     if (alienMove === alienMovement.length) alienMove = 0
     if(aliens.some(alien => alien >= 240)) clearInterval(alienTimer)
@@ -127,37 +127,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const alienBombTimer = setInterval(alienBomb, 1000)
 
   function alienBomb() {
-    const randomIndex = Math.floor(Math.random() * 10)
-    let bombIndex = aliens[randomIndex]
+    // const randomIndex = Math.floor(Math.random() * 10)
+    let bombIndex = aliens[Math.floor(Math.random() * aliens.length)]
 
     // make sure we clear the interval so we don't duplicate it
     // clearInterval(bombInterval)
     bombInterval = setInterval(() => {
 
       // check that our index won't go out of range
-      if (bombIndex + width <= squares.length) {
+      if(bombIndex + width <= squares.length) {
 
         // ensure we allow enough "width" for the bomb to reach the bottom
-        if(bombIndex + width <= 260) {
+        if(bombIndex + width <= 255) {
           squares[bombIndex].classList.remove('bomb')
           bombIndex += width
           squares[bombIndex].classList.add('bomb')
         } else {
-          squares[bombIndex].classList.remove('bomb') //This is currently causing error messages
+          squares[bombIndex].classList.remove('bomb')
         }
 
-        // remove the bomb when it hits a player
+        // remove the bomb and player when it hits the player
         if(squares[bombIndex].classList.contains('player')) {
-          squares[bombIndex].classList.remove('player')
-          squares[bombIndex].classList.remove('bomb')
+          playerLives.pop()
+          // squares[bombIndex].classList.remove('player')
 
-          //clear the bomb interval because it's hit the player
-          clearInterval(bombInterval)
+          squares[bombIndex].classList.remove('bomb')
         }
 
       // otherwise just remove the bomb because we'll go out of index
       } else {
         squares[bombIndex].classList.remove('bomb')
+        // clearInterval(bombInterval)
       }
     }, 500)
   }
