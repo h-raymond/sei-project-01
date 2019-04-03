@@ -8,8 +8,8 @@ let aliens = aliensStart.slice()
 let playerIndex = 247
 let alienMove = 0
 let scoreTotal = 0
-let bombInterval = 0
-let livesRemaining = 1
+let bombIntervals = []
+let livesRemaining = 3
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const playerLives = document.querySelectorAll('.lives img')
   const endGame = document.querySelector('.end-game')
   const playAgainBtn = document.querySelector('#play-again')
-
 
   function addPlayerClass(){
     squares[playerIndex].classList.add('player')
@@ -72,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     aliens.forEach((alienIndex) => {
       squares[alienIndex].classList.remove('alien')
     })
-
     //add alienMovement array to each number in the aliens
     aliens = aliens.map((alienIndex) => alienIndex + alienMovement[alienMove])
 
@@ -82,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Increase alien moves through the array
     alienMove++
-    if (alienMove === alienMovement.length) alienMove = 0
+    if(alienMove === alienMovement.length) alienMove = 0
     if(aliens.some(alien => alien >= 240)) {
       gameOver()
     }
@@ -91,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // const randomIndex = Math.floor(Math.random() * 10)
     let bombIndex = aliens[Math.floor(Math.random() * aliens.length)]
     // make sure we clear the interval so we don't duplicate it
-    bombInterval = setInterval(() => {
+    const bombInterval = setInterval(() => {
 
       // check that our index won't go out of range
       if(bombIndex + width <= squares.length) {
@@ -121,6 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
         squares[bombIndex].classList.remove('bomb')
       }
     }, 500)
+
+    bombIntervals.push(bombInterval)
   }
   function newGame() {
     // Elements that have to be reset to start a newGame
@@ -129,14 +129,17 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.style.display = 'flex'
     scoreTotal = 0
     score.innerText = scoreTotal
-    aliens = aliensStart
+    aliens = aliensStart.slice()
+    aliens.forEach((alienIndex) => {
+      squares[alienIndex].classList.add('alien')
+    })
     //Functions to run to allow the game to begin
     addPlayerClass()
-    moveAliens()
-    alienBomb()
+    alienTimer = setInterval(moveAliens, 500)
+    alienBombTimer = setInterval(alienBomb, 1000)
   }
   function gameOver() {
-    clearInterval(bombInterval)
+    bombIntervals.forEach(bombInterval => clearInterval(bombInterval))
     clearInterval(alienTimer)
     clearInterval(alienBombTimer)
     // Display end game screen
@@ -150,24 +153,22 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     livesRemaining = 3
     playerIndex = 247
-    bombInterval = 0
+    bombIntervals = []
     alienMove = 0
-    aliens.forEach((alienIndex) => {
-      console.log('clearing', alienIndex)
-      squares[alienIndex].classList.remove('alien')
+    squares.forEach(square => {
+      console.log('clearing', square)
+      square.classList.remove('alien', 'missile', 'player', 'bomb')
     })
   }
 
-  const alienTimer = setInterval(moveAliens, 500)
-  const alienBombTimer = setInterval(alienBomb, 1000)
-
+  let alienTimer = setInterval(moveAliens, 700)
+  let alienBombTimer = setInterval(alienBomb, 3000)
   for(let i = 0; i < width ** 2; i++) {
     const square = document.createElement('div')
     squares.push(square)
     grid.appendChild(square)
   }
 
-  addPlayerClass()
   document.addEventListener('keydown', (e) => {
     switch(e.keyCode) {
       case 37:
@@ -186,16 +187,12 @@ document.addEventListener('DOMContentLoaded', () => {
         break
     }
   })
-
   document.addEventListener('keydown', (e) => {
     if(e.keyCode === 32) fireMissile()
   })
-
   playAgainBtn.addEventListener('click', newGame)
 
-  aliens.forEach((alienIndex) => {
-    squares[alienIndex].classList.add('alien')
-  })
+  newGame()
 
 
   // CLOSING OF DOMContentLoaded
