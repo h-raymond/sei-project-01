@@ -33,9 +33,10 @@ main {
 .player-info {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  padding: 1.2%;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 1.6% 0%;
+  width: 600px;
 }
 h1 {
   font-size: 36px;
@@ -63,8 +64,8 @@ h4 {
 }
 
 .grid {
-  width: 350px;
-  height: 350px;
+  width: 600px;
+  height: 600px;
   border: 1px solid black;
   border-radius: 4px;
   display: flex;
