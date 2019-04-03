@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let bombInterval = 0
   const playerLives = document.querySelectorAll('.lives img')
   let livesRemaining = 3
+  const endGame = document.querySelector('.end-game')
 
   // ====================== FUNCTIONS =====================
 
@@ -146,6 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(alienTimer)
             clearInterval(alienBombTimer)
             grid.style.display = 'none'
+
+            //https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+            const header = endGame.document.createElement('h4')
+            header.textContent = 'Game Over'
+
+            // INPUT END GAME FUNCTIONALITY HERE
+
           }
           squares[bombIndex].classList.remove('bomb')
         }
