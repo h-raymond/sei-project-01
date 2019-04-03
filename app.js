@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const playerLives = document.querySelectorAll('.lives img')
   let livesRemaining = 3
   const endGame = document.querySelector('.end-game')
+  const playAgainBtn = document.querySelector('#play-again')
+  const exitBtn = document.querySelector('#exit')
 
   // ====================== FUNCTIONS =====================
 
@@ -149,8 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.style.display = 'none'
 
             //https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-            const header = endGame.document.createElement('h4')
-            header.textContent = 'Game Over'
+            endGame.classList.remove('hidden')
 
             // INPUT END GAME FUNCTIONALITY HERE
 
