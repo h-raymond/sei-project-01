@@ -1,22 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ====================== VARIABLES =====================
+
   const grid = document.querySelector('.grid')
+  const score = document.querySelector('.score')
+  const playerInfo = document.querySelector('.player-info')
+  const finalScore = document.querySelector('#final-score')
+  const playerLives = document.querySelectorAll('.lives img')
+  const endGame = document.querySelector('.end-game')
+  const playAgainBtn = document.querySelector('#play-again')
   const width = 16
   const squares = []
   const aliensStart = [2,3,4,5,6,7,8,9,10,11,12,13,18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
+  const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
   let aliens = aliensStart
   let playerIndex = 247
   let alienMove = 0
-  const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
-  const score = document.querySelector('.score')
   let scoreTotal = 0
   let bombInterval = 0
-  const playerLives = document.querySelectorAll('.lives img')
   let livesRemaining = 3
-  const endGame = document.querySelector('.end-game')
-  const playAgainBtn = document.querySelector('#play-again')
-  const exitBtn = document.querySelector('#exit')
 
   // ====================== FUNCTIONS =====================
 
@@ -30,6 +32,41 @@ document.addEventListener('DOMContentLoaded', () => {
     player.classList.remove('player')
     // add the class of player to square the player should move to
     addPlayerClass()
+  }
+  // startGame function
+
+  // clear all the alien classes from the grid
+  // re-set the alien array
+  // re-set the score
+  // apply the alien classes
+  // start the movement
+  // start the bombs dropping
+  // hide the start/end screen
+
+  function newGame() {
+    endGame.classList.add('hidden')
+    playerInfo.classList.remove('hidden')
+    playerIndex = 247
+    livesRemaining = 3
+    scoreTotal = 0
+    bombInterval = 0
+    alienMove = 0
+    aliensStart
+    clearInterval(bombInterval)
+    clearInterval(alienTimer)
+    clearInterval(alienBombTimer)
+    moveAliens()
+    alienBomb()
+  }
+  function gameOver() {
+    clearInterval(bombInterval)
+    clearInterval(alienTimer)
+    clearInterval(alienBombTimer)
+    // Display end game screen
+    grid.style.display = 'none'
+    endGame.classList.remove('hidden')
+    playerInfo.classList.add('hidden')
+    finalScore.innerText = scoreTotal
   }
 
   // ======================== GRID ========================
@@ -113,8 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     alienMove++
     if (alienMove === alienMovement.length) alienMove = 0
     if(aliens.some(alien => alien >= 240)) {
-      clearInterval(alienTimer)
-      clearInterval(alienBombTimer)
+      gameOver()
     }
   }
 
@@ -135,26 +171,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           squares[bombIndex].classList.remove('bomb')
         }
-
         // remove the bomb and player when it hits the player
         if(squares[bombIndex].classList.contains('player')) {
           livesRemaining--
-
           for(let i=0;i<playerLives.length - livesRemaining;i++) {
             playerLives[i].classList.add('hidden')
           }
-          // end the game, ie stop all the intervals
-          if(livesRemaining === 0){
+          // End the game, ie stop all the intervals
+          if(livesRemaining === 0){ //OR ALIENS IN ARRAY REACH THE BOTTOM
             clearInterval(bombInterval)
             clearInterval(alienTimer)
             clearInterval(alienBombTimer)
+            // Display end game screen
             grid.style.display = 'none'
-
-            //https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
             endGame.classList.remove('hidden')
-
-            // INPUT END GAME FUNCTIONALITY HERE
-
+            playerInfo.classList.add('hidden')
+            finalScore.innerText = scoreTotal
           }
           squares[bombIndex].classList.remove('bomb')
         }
@@ -171,6 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (e) => {
     if(e.keyCode === 32) fireMissile()
   })
+
+  playAgainBtn.addEventListener('click', newGame)
 
 
   // ======================= ALIENS =======================
