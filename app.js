@@ -2,8 +2,7 @@
 
 const width = 16
 const squares = []
-const aliensStart = [2,3,4,5,6,7,8,9,10,11,12]
-// 13,18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
+const aliensStart = [2,3,4,5,6,7,8,9,10,11,12,13,18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38,39,40,41,42,43,44,45]
 const alienMovement = [1,1,width,-1,-1,-1,-1,width,1,1]
 let aliens = aliensStart.slice()
 let playerIndex = 247
@@ -71,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         missileTarget.classList.remove('missile')
       }
-    }, 80)
+    }, 50)
   }
   function moveAliens() {
     aliens.forEach((alienIndex) => {
@@ -115,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else clearInterval(bombInterval)
       }
 
-    }, 100)
+    }, 300)
     bombIntervals.push(bombInterval)
   }
   function newGame() {
@@ -133,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     //Functions to run to allow the game to begin
     addPlayerClass()
-    alienTimer = setInterval(moveAliens, 500)
+    alienTimer = setInterval(moveAliens, 400)
     alienBombTimer = setInterval(alienBomb, 1000)
   }
   function gameOver(message) {
