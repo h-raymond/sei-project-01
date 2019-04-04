@@ -10,6 +10,8 @@ let alienMove = 0
 let scoreTotal = 0
 let bombIntervals = []
 let livesRemaining = 3
+let alienTimer
+let alienBombTimer
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -21,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const finalScore = document.querySelector('#final-score')
   const playerLives = document.querySelectorAll('.lives img')
   const endGame = document.querySelector('.end-game')
-  const playAgainBtn = document.querySelector('#play-again')
+  const playAgainBtn = document.querySelector('.play-again')
 
   function addPlayerClass(){
     squares[playerIndex].classList.add('player')
@@ -127,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
     endGame.classList.add('hidden')
     playerInfo.classList.remove('hidden')
     grid.style.display = 'flex'
+    for(let i = 0; i < width ** 2; i++) {
+      const square = document.createElement('div')
+      squares.push(square)
+      grid.appendChild(square)
+    }
     scoreTotal = 0
     score.innerText = scoreTotal
     aliens = aliensStart.slice()
@@ -161,13 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  let alienTimer = setInterval(moveAliens, 700)
-  let alienBombTimer = setInterval(alienBomb, 3000)
-  for(let i = 0; i < width ** 2; i++) {
-    const square = document.createElement('div')
-    squares.push(square)
-    grid.appendChild(square)
-  }
+  // alienTimer = setInterval(moveAliens, 700)
+  // alienBombTimer = setInterval(alienBomb, 3000)
+  // for(let i = 0; i < width ** 2; i++) {
+  //   const square = document.createElement('div')
+  //   squares.push(square)
+  //   grid.appendChild(square)
+  // }
 
   document.addEventListener('keydown', (e) => {
     switch(e.keyCode) {
